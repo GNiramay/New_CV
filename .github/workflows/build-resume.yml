@@ -40,6 +40,12 @@ jobs:
     - name: Make compile script executable
       run: chmod +x Compile.sh
 
+    - name: Create dummy folder
+      run: mkdir Personal
+
+    - name: Create dummy file
+      run: echo "\name{Niramay}{Gogate}\position{phd candidate{\enskip\cdotp\enskip}High Energy Physics}" >  Personal/contacts.tex
+
     - name: Run compile script
       run: latexmk -lualatex resume.tex
       continue-on-error: true

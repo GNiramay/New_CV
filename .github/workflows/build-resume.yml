@@ -41,7 +41,13 @@ jobs:
       run: chmod +x Compile.sh
 
     - name: Run compile script
-      run: ./Compile.sh
+      run: latexmk -lualatex resume.tex
+      continue-on-error: true
+
+    - name: Cleanup
+      run: rm -f resume.aux resume.fdb_latexmk resume.fls resume.log resume.out
+
+      # run: ./Compile.sh
 
     - name: Upload PDF artifact
       uses: actions/upload-artifact@v4

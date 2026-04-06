@@ -276,5 +276,5 @@ TSWLatexianTemp*
 *.lpz
 
 # Repo specific
-Personal.tex
-Trash/*
+Personal
+TRASH

@@ -21,45 +21,45 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout repo
-      - uses: actions/checkout@v4
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Checkout repo
+    - uses: actions/checkout@v4
 
-      # installing latex
-      - name: Install LaTeX (TeX Live)  
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            texlive-luatex \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            texlive-science \
-            latexmk
+    # installing latex
+    - name: Install LaTeX (TeX Live)  
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          texlive-luatex \
+          texlive-latex-extra \
+          texlive-fonts-recommended \
+          texlive-fonts-extra \
+          texlive-science \
+          latexmk
 
-      - name: Make compile script executable
-        run: chmod +x Compile.sh
+    - name: Make compile script executable
+      run: chmod +x Compile.sh
 
-      - name: Run compile script
-        run: ./Compile.sh
+    - name: Run compile script
+      run: ./Compile.sh
 
-      - name: Upload PDF artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: resume-pdf
-          path: |
-            *.pdf
+    - name: Upload PDF artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: resume-pdf
+        path: |
+          *.pdf
             
-      - name: Commit PDF to repo
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          git add *.pdf
-          git commit -m "Auto-build resume PDF" || echo "No changes"
-          git push
+    - name: Commit PDF to repo
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
+        git add *.pdf
+        git commit -m "Auto-build resume PDF" || echo "No changes"
+        git push
 
-      - name: Cache TeX Live
-        uses: actions/cache@v4
-        with:
-          path: /usr/share/texlive
-          key: texlive-${{ runner.os }}
+    - name: Cache TeX Live
+      uses: actions/cache@v4
+      with:
+        path: /usr/share/texlive
+        key: texlive-${{ runner.os }}

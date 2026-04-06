@@ -44,7 +44,7 @@ jobs:
       run: mkdir Personal
 
     - name: Create dummy file
-      run: echo "\name{Niramay}{Gogate}\position{phd candidate{\enskip\cdotp\enskip}High Energy Physics}" >  Personal/contacts.tex
+      run: echo "\name{Niramay}{Gogate}">Personal/contacts.tex; echo>> Personal/contacts.tex; echo "\position{phd candidate{\enskip\cdotp\enskip}High Energy Physics}" >>  Personal/contacts.tex
 
     - name: Run compile script
       run: latexmk -lualatex resume.tex

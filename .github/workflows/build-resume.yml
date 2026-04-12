@@ -59,15 +59,6 @@ jobs:
       - name: Create dummy folder
         run: mkdir -p Personal
 
-      # Fix #5: use printf to avoid shell escaping mangling LaTeX macros
-      - name: Create dummy contacts file
-        run: |
-          printf '%s\n' \
-            '\name{Niramay}{Gogate}' \
-            '' \
-            '\position{phd candidate{\enskip\cdotp\enskip}High Energy Physics}' \
-            > Personal/contacts.tex
-
       # Fix #1: add --interaction=nonstopmode; Fix #4: removed continue-on-error
       - name: Run compile script
         run: latexmk -lualatex -interaction=nonstopmode -halt-on-error resume.tex

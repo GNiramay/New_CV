@@ -12,6 +12,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Fix #2: grant write access so git push works
+permissions:
+  contents: write
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -21,57 +25,68 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    # installing latex
-    - name: Install LaTeX (TeX Live)  
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          texlive-luatex \
-          texlive-latex-extra \
-          texlive-fonts-recommended \
-          texlive-fonts-extra \
-          texlive-science \
-          latexmk
+      # Fix #3: restore cache BEFORE installing
+      - name: Restore TeX Live cache
+        id: cache-texlive
+        uses: actions/cache@v4
+        with:
+          path: /usr/share/texlive
+          key: texlive-${{ runner.os }}-v2
 
-    - name: Make compile script executable
-      run: chmod +x Compile.sh
+      # installing latex
+      - name: Install LaTeX (TeX Live)
+        if: steps.cache-texlive.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-luatex \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-science \
+            texlive-bibtex-extra \
+            latexmk
 
-    - name: Create dummy folder
-      run: mkdir Personal
+      - name: Make compile script executable
+        run: chmod +x Compile.sh
 
-    - name: Create dummy file
-      run: echo "\name{Niramay}{Gogate}">Personal/contacts.tex; echo>> Personal/contacts.tex; echo "\position{phd candidate}" >>  Personal/contacts.tex
+      - name: Create dummy folder
+        run: mkdir -p Personal
 
-    - name: Run compile script
-      run: latexmk -lualatex resume.tex
-      continue-on-error: true
+      # Fix #5: use printf to avoid shell escaping mangling LaTeX macros
+      - name: Create dummy contacts file
+        run: |
+          printf '%s\n' \
+            '\name{Niramay}{Gogate}' \
+            '' \
+            '\position{phd candidate{\enskip\cdotp\enskip}High Energy Physics}' \
+            > Personal/contacts.tex
 
-    - name: Cleanup
-      run: rm -f resume.aux resume.fdb_latexmk resume.fls resume.log resume.out
+      # Fix #1: add --interaction=nonstopmode; Fix #4: removed continue-on-error
+      - name: Run compile script
+        run: latexmk -lualatex -interaction=nonstopmode -halt-on-error resume.tex
 
-      # run: ./Compile.sh
+      - name: Cleanup
+        run: rm -f resume.aux resume.fdb_latexmk resume.fls resume.log resume.out
 
-    - name: Upload PDF artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: resume-pdf
-        path: |
-          *.pdf
-            
-    - name: Commit PDF to repo
-      run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "actions@github.com"
-        git add *.pdf
-        git commit -m "Auto-build resume PDF" || echo "No changes"
-        git push
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-pdf
+          path: "*.pdf"
 
-    - name: Cache TeX Live
-      uses: actions/cache@v4
-      with:
-        path: /usr/share/texlive
-        key: texlive-${{ runner.os }}
+      # Fix #2: inject token into remote URL; add [skip ci] to prevent infinite loop
+      - name: Commit PDF to repo
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add *.pdf
+          git diff --cached --quiet && echo "No changes to commit" || git commit -m "Auto-build resume PDF [skip ci]"
+          git push

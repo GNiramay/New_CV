@@ -37,6 +37,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /usr/share/texlive
+          path: |
+            /usr/share/texlive
+            /usr/bin/lualatex
+            /usr/bin/latexmk
+            /usr/bin/luatex          
           key: texlive-${{ runner.os }}-v2
 
       # installing latex

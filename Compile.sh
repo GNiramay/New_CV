@@ -5,6 +5,7 @@
 # rm -f resume.aux resume.log resume.out
 
 # Taking care of personal information
+rm -f Personal/contacts.tex
 cp -f Personal/contacts_actual.tex Personal/contacts.tex
 latexmk -lualatex resume.tex
 rm -f resume.aux resume.fdb_latexmk resume.fls resume.log resume.out

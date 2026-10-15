@@ -18,6 +18,11 @@
 %-------------------------------------------------------------------------------
 % CONFIGURATIONS
 %-------------------------------------------------------------------------------
+\directlua{
+  pdf.setcompresslevel(0)
+  pdf.setobjcompresslevel(0)
+}
+
 % A4 paper size by default, use 'letterpaper' for US letter
 \documentclass[12pt, a4paper]{awesome-cv}
 
@@ -77,9 +82,9 @@
 \input{resume/publication.tex}
 \input{resume/presentation.tex}
 \input{resume/education.tex}
-\input{resume/honors.tex}
+%% \input{resume/honors.tex}
 
-%%\input{resume/committees.tex}
+%% \newpage\input{resume/committees.tex}
 %% \input{resume/extracurricular.tex}
 
 %-------------------------------------------------------------------------------

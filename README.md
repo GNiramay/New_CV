@@ -6,7 +6,7 @@ Compile the document using `. Compile.sh`. Note: it requires lualatex
 - **Title:** Modeling & Simulation Machine Learning Engineer (Job ID R000161635)
 - **Location:** Nanakramguda, Hyderabad, India (full time, entry level)
 - **About the job:** Combine modeling and simulation (finite element, CFD, production-system models) with machine learning on physical data to build digital twins and fast surrogate models for high-speed consumer-goods manufacturing, and turn the insights into recommendations for R&D and manufacturing teams. Wants an engineering or quantitative PhD/Master's, Python or R, large-dataset analysis, and AI-assisted development experience.
-- **Apply at:** https://www.pgcareers.com (search for job ID R000161635)
+- **Apply at:** https://www.pgcareers.com/global/en/job/R000161635/Modeling-Simulation-Machine-Learning-Engineer
 - **CV changes on this branch:** new Summary and Skills sections, ML and data bullets in the CMS thesis entry, COMSOL described as finite element, Teaching section hidden to save space.
 <h1 align="center">
   <a href="https://github.com/posquit0/Awesome-CV" title="AwesomeCV Documentation">
